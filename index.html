@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>System Terminal — Mahi</title>
+<style>
+  body { background: #000; color: #7CFC00; font-family: "Courier New", monospace; margin:0; padding:30px; }
+  #screen { width:100%; max-width:1000px; margin:0 auto; padding:20px; border:2px solid #0f0; box-shadow:0 0 30px rgba(0,255,0,0.08); min-height:420px; }
+  .line { white-space:pre-wrap; line-height:1.5; font-size:16px; }
+  .cursor { display:inline-block; width:10px; background:#7CFC00; margin-left:6px; animation:blink .8s steps(1) infinite; vertical-align:middle;}
+  @keyframes blink { 50% { opacity:0 } }
+  #reveal { margin-top:18px; background:#7CFC00; padding:10px 14px; color:#000; font-weight:700; display:none; border-radius:6px; }
+  footer { margin-top:18px; color:#aaa; font-size:13px; }
+</style>
+</head>
+<body>
+  <div id="screen" role="region" aria-label="Fake terminal">
+    <div id="content" class="line"></div>
+    <div id="reveal">PRANK! 😀 — Kono kichu hack kora hoyni. (Mahi-r prank)</div>
+    <footer>Click anywhere after finish to dismiss.</footer>
+  </div>
+
+<script>
+const lines = [
+  "Initializing remote terminal...",
+  "Scanning network interfaces...",
+  "Bypassing non-existent firewall [████████░░░░] 83%",
+  "Elevating privileges (just for show)...",
+  "Loading user modules...",
+  "Decrypting totally-not-secret-data...",
+  "Accessing friendly-server.example.com",
+  "Reading public readme.txt",
+  "Compiling prank payload...",
+  "Almost done..."
+];
+
+const content = document.getElementById('content');
+let i=0, j=0;
+
+function typeChar() {
+  if(i >= lines.length) { showReveal(); return; }
+  const line = lines[i];
+  if(j <= line.length) {
+    content.innerText = content.innerText.replace(/\u2588$/, '') + line.slice(0,j) + '\u2588';
+    j++;
+    setTimeout(typeChar, 25 + Math.random()*60);
+  } else {
+    content.innerText = content.innerText.replace(/\u2588$/, '') + '\n';
+    i++; j=0;
+    setTimeout(typeChar, 300 + Math.random()*300);
+  }
+}
+
+function showReveal(){
+  document.getElementById('reveal').style.display = 'inline-block';
+  content.innerText += "\n>>> Finished. Click anywhere to close.\n";
+  document.body.addEventListener('click', ()=> { alert('Tumi ekta harmless prank dekhecho!'); });
+}
+
+typeChar();
+</script>
+</body>
+</html>
