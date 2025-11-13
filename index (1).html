@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>!! SECURITY ALERT !!</title>
+<style>
+  :root{--red:#ff0033;--black:#000;--yellow:#ffd700;--muted:#ddd}
+  html,body{height:100%;margin:0;background:var(--black);color:var(--muted);font-family: "Courier New", monospace}
+  .overlay{
+    position:fixed;inset:0;
+    background:linear-gradient(180deg, rgba(0,0,0,0.85), rgba(0,0,0,0.95));
+    display:flex;align-items:center;justify-content:center;z-index:9999;padding:20px;
+  }
+  .box{
+    width:100%;max-width:900px;border:4px solid var(--red);padding:22px;border-radius:8px;
+    box-shadow:0 0 40px rgba(255,0,51,0.15);background:radial-gradient(circle at 10% 10%, rgba(255,0,51,0.05), transparent 20%);
+  }
+  .big {
+    font-size:38px; font-weight:900; color:var(--red); text-align:center; letter-spacing:2px;
+    text-shadow:0 0 18px rgba(255,0,51,0.65);
+    transform:translateY(0);
+    animation: shake 0.6s infinite;
+  }
+  @keyframes shake{
+    0%{transform:translateX(-2px)}25%{transform:translateX(2px)}50%{transform:translateX(-2px)}75%{transform:translateX(2px)}100%{transform:translateX(-2px)}
+  }
+  .sub{
+    text-align:center;color:var(--yellow);font-weight:700;margin-top:6px;
+  }
+  pre.log{
+    background:#060606;border:1px solid rgba(255,255,255,0.04);padding:14px;margin:18px 0;color:#8fffa0;
+    max-height:240px;overflow:auto;white-space:pre-wrap;
+  }
+  .countdown{
+    text-align:center;font-size:28px;margin-top:6px;color:var(--red);font-weight:800;
+    animation: pulse 1s infinite;
+  }
+  @keyframes pulse{0%{opacity:1}50%{opacity:0.3}100%{opacity:1}}
+  .controls{display:flex;gap:10px;justify-content:center;margin-top:12px}
+  button{padding:8px 12px;border-radius:8px;border:2px solid var(--muted);background:transparent;color:var(--muted);cursor:pointer}
+  .prank-note{color:#999;font-size:13px;text-align:center;margin-top:8px}
+  .danger{color:var(--red);font-weight:700}
+</style>
+</head>
+<body>
+  <div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-label="Security alert">
+    <div class="box" id="box">
+      <div class="big" id="bigText">!! YOU ARE HACKED UDOY !!</div>
+      <div class="sub" id="subText">SYSTEM INTRUSION DETECTED — MAHI ROOTKIT</div>
+
+      <pre class="log" id="log" aria-live="polite"></pre>
+
+      <div class="countdown" id="count">LAUNCHING PAYLOAD IN 10</div>
+
+      <div class="controls">
+        <button id="restart">Restart Prank</button>
+      </div>
+
+      <div class="prank-note">*** <span class="danger">PRANK:</span> I WILL HACK YOU UDOY UDOY ...... ***</div>
+    </div>
+  </div>
+
+<script>
+  // Dramatic lines to display (you can edit)
+  const lines = [
+    "[INIT] Kernel breach simulated...",
+    "[WARN] Unauthorized process spawned: mahishell",
+    "[WARN] Escalating privileges...",
+    "[ALERT] Encrypting fake-files... [██████████]",
+    "[TRACE] Remote session opened from 51.120.XXX.XXX",
+    "[TRACE] Webcam? CHECKING...",
+    "[ERROR] Firewall bypassed (simulated)",
+    "[NOTE] Target user: friend@local",
+    "[PAYLOAD] Preparing dramatic effect..."
+  ];
+
+  const log = document.getElementById('log');
+  const big = document.getElementById('bigText');
+  const sub = document.getElementById('subText');
+  const countEl = document.getElementById('count');
+  const overlay = document.getElementById('overlay');
+
+  // typing animation
+  let i=0, j=0;
+  function typeLoop(){
+    if(i >= lines.length){
+      startCountdown(10);
+      return;
+    }
+    const line = lines[i];
+    if(j <= line.length){
+      log.textContent = log.textContent.replace(/\u2588$/,'') + line.slice(0,j) + '\u2588';
+      j++;
+      setTimeout(typeLoop, 20 + Math.random()*70);
+    } else {
+      log.textContent = log.textContent.replace(/\u2588$/,'') + "\n";
+      i++; j=0;
+      setTimeout(typeLoop, 220 + Math.random()*400);
+    }
+    log.scrollTop = log.scrollHeight;
+  }
+
+  // short ominous tone using WebAudio (brief and harmless)
+  function playOminous(){
+    try{
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const o = ctx.createOscillator();
+      const g = ctx.createGain();
+      o.type = 'sawtooth';
+      o.frequency.value = 120;
+      g.gain.value = 0;
+      o.connect(g); g.connect(ctx.destination);
+      o.start();
+      // ramp up
+      g.gain.linearRampToValueAtTime(0.05, ctx.currentTime + 0.02);
+      o.frequency.exponentialRampToValueAtTime(40, ctx.currentTime + 1.4);
+      // fade out
+      g.gain.linearRampToValueAtTime(0.0, ctx.currentTime + 2.0);
+      setTimeout(()=>{ o.stop(); ctx.close(); }, 2100);
+    }catch(e){ /* ignore if audio blocked */ }
+  }
+
+  function startCountdown(n){
+    let t = n;
+    countEl.textContent = "LAUNCHING PAYLOAD IN " + t;
+    playOminous();
+    const iv = setInterval(()=>{
+      t--;
+      if(t <= 0){
+        clearInterval(iv);
+        // final scary flash
+        big.textContent = "!! SYSTEM COMPROMISED !!";
+        sub.textContent = "ALL SERVICES TAKEN OVER (SIMULATED)";
+        countEl.textContent = "PRANK COMPLETE";
+        // flashing background effect
+        boxFlash();
+      } else {
+        countEl.textContent = "LAUNCHING PAYLOAD IN " + t;
+      }
+    }, 1000);
+  }
+
+  function boxFlash(){
+    const box = document.getElementById('box');
+    let k=0;
+    const iv = setInterval(()=>{
+      box.style.boxShadow = (k%2===0) ? "0 0 60px rgba(255,0,51,0.45)" : "0 0 10px rgba(255,0,51,0.12)";
+      k++;
+      if(k>8){ clearInterval(iv); }
+    }, 220);
+  }
+
+  document.getElementById('restart').addEventListener('click', ()=>{
+    // reset
+    log.textContent = "";
+    i=0; j=0;
+    big.textContent = "!! YOU ARE HACKED UDOY !!";
+    sub.textContent = "SYSTEM INTRUSION DETECTED — MAHI ROOTKIT";
+    countEl.textContent = "LAUNCHING PAYLOAD IN 10";
+    overlay.style.display = 'flex';
+    typeLoop();
+  });
+
+  // start
+  typeLoop();
+
+  // also allow ESC to dismiss
+  document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') document.getElementById('dismiss').click(); });
+</script>
+</body>
+</html>
